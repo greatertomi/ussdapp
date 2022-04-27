@@ -1,9 +1,10 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+const PORT = process.env.PORT || 4000;
+
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
 app.post('/ussd', (req, res) => {
   // Read the variables sent via POST from our API
@@ -32,7 +33,7 @@ app.post('/ussd', (req, res) => {
     // This is a terminal request. Note how we start the response with END
     response = `END Your phone number is ${phoneNumber}`;
   } else if (text == '3') {
-    response = 'People have several problems'
+    response = 'END People have several problems'
   } else if ( text == '1*1') {
     // This is a second level response where the user selected 1 in the first instance
     const accountNumber = 'ACC100101';
@@ -43,4 +44,12 @@ app.post('/ussd', (req, res) => {
   // Send the response back to the API
   res.set('Content-Type: text/plain');
   res.send(response);
+});
+
+app.get('/test', (req, res) => {
+  res.send('This route is live')
+})
+
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
 });
